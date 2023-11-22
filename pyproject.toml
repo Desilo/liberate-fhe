@@ -1,0 +1,62 @@
+[tool.poetry]
+name = "liberate"
+version = "v0.9.0"
+description = "Desilo Liberate Library"
+authors = [
+    "Juwhan Kim <juwhan.kim@desilo.ai>",
+    "Hanyul Ryu <hanyul.ryu@desilo.ai>"
+]
+maintainers = [
+    "Juwhan Kim <juwhan.kim@desilo.ai>",
+    "Hanyul Ryu <hanyul.ryu@desilo.ai>"
+]
+readme = [
+    "README.md"
+]
+homepage = "https://github.com/Desilo/Liberate"
+documentation = "https://github.com/Desilo/Liberate"
+license = "BSD-3-Clause-Clear"
+keywords = ["DESILO", "liberate", "homomorphic encryption", "CKKS", "random number generation"]
+exclude = [
+    "liberate/csprng/setup.py",
+    "liberate/csprng/*.cu",
+    "liberate/csprng/*.cpp",
+    "liberate/csprng/*.h",
+    "liberate/ntt/*.cpp",
+    "liberate/ntt/*.cu",
+    "liberate/ntt/setup.py"
+]
+include = [
+    "liberate/csprng/*.so",
+    "liberate/ntt/*.so"
+]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+numpy = "^1.23.5"
+mpmath = "^1.3.0"
+scipy = "^1.10.1"
+matplotlib = "^3.7.1"
+joblib = "^1.2.0"
+torch = "^2.0.0"
+tqdm = "^4.66.1"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
+devtools = "^0.10.0"
+flake8 = "^6.0.0"
+isort = "^5.12.0"
+pytest = "^7.2.1"
+pytest-xdist = "^3.2.0"
+
+[build-system]
+requires = ["poetry-core", "torch", "setuptools"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+target-version = ['py310']
+line-length = 79
+
+[tool.isort]
+profile = "black"
+line_length = 79
