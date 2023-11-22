@@ -60,7 +60,7 @@ ct_result = engine.sub(ct_mult, ct0)
 result_decrypted = engine.decrode(ct_result, sk)
 ```
 
-If you would like a detailed explanation, please refer to the official documentation.
+If you would like a detailed explanation, please refer to the [official documentation](https://docs.desilo.ai/liberate-fhe/getting-started/quick-start).
 
 
 
@@ -97,6 +97,12 @@ poetry build
 pip install .
 # poetry run python -m pip install .
 ```
+
+
+
+# Documentation
+
+Please refer to [Liberate.FHE](https://docs.desilo.ai/liberate-fhe/api-references/docs) for detailed installation instructions, examples, and documentation.
 
 
 
