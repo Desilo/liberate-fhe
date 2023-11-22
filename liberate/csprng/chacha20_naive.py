@@ -10,10 +10,10 @@ torch.backends.cudnn.benchmark = True
 @torch.jit.script
 def roll(x: torch.Tensor, s: int) -> None:
     """
-        x's dtype must be torch.int64.
-        We are kind of forced to do this because
-        1. pytorch doesn't support unit32, and
-        2. >> doesn't move the sign bit.
+    x's dtype must be torch.int64.
+    We are kind of forced to do this because
+    1. pytorch doesn't support unit32, and
+    2. >> doesn't move the sign bit.
     """
     mask = 0xFFFFFFFF
     right_shift = 32 - s
@@ -54,7 +54,7 @@ def roll7(x: torch.Tensor) -> None:
 @torch.jit.script
 def QR(x: torch.Tensor, a: int, b: int, c: int, d: int) -> None:
     """
-        The CHACHA quarter round.
+    The CHACHA quarter round.
     """
     mask = 0xFFFFFFFF
 
@@ -113,7 +113,7 @@ def chacha20(state: torch.Tensor) -> torch.Tensor:
 
 class chacha20_naive:
     def __init__(
-            self, size, seed=None, nonce=None, count_step=1, device="cuda:0"
+        self, size, seed=None, nonce=None, count_step=1, device="cuda:0"
     ):
         self.size = size
         self.device = device

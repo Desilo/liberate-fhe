@@ -16,10 +16,19 @@ torch.backends.cudnn.benchmark = True
 
 
 class Csprng:
-    def __init__(self, num_coefs=2 ** 15, num_channels=[8], num_repeating_channels=2,
-                 sigma=3.2, devices=None, seed=None, nonce=None):
+    def __init__(
+        self,
+        num_coefs=2**15,
+        num_channels=[8],
+        num_repeating_channels=2,
+        sigma=3.2,
+        devices=None,
+        seed=None,
+        nonce=None,
+    ):
         """N is the length of the polynomial, and C is the number of RNS channels.
-        procure the maximum (at level zero, special multiplication) at initialization."""
+        procure the maximum (at level zero, special multiplication) at initialization.
+        """
 
         # This CSPRNG class generates
         # 1. num_coefs x (num_channels + num_repeating_channels) uniform distributed
@@ -45,7 +54,7 @@ class Csprng:
         # By default, use all the available GPUs on the system.
         if devices is None:
             gpu_count = torch.cuda.device_count()
-            self.devices = [f'cuda:{i}' for i in range(gpu_count)]
+            self.devices = [f"cuda:{i}" for i in range(gpu_count)]
         else:
             self.devices = devices
 
@@ -59,8 +68,10 @@ class Csprng:
             self.shares = self.num_channels
         else:
             # User input was contradicting.
-            raise Exception("There was a contradicting mismatch between "
-                            "num_channels, and devices.")
+            raise Exception(
+                "There was a contradicting mismatch between "
+                "num_channels, and devices."
+            )
 
         # How many channels in total?
         self.total_num_channels = sum(self.shares)
@@ -72,8 +83,12 @@ class Csprng:
         self.L = self.num_coefs // 4
 
         # We build binary search tree for discrete gaussian here.
-        self.btree, self.btree_ptr, self.btree_size, self.tree_depth = \
-            build_CDT_binary_search_tree(security_bits=128, sigma=sigma)
+        (
+            self.btree,
+            self.btree_ptr,
+            self.btree_size,
+            self.tree_depth,
+        ) = build_CDT_binary_search_tree(security_bits=128, sigma=sigma)
 
         # Counter range at each GPU.
         # Note that the counters only include the non-repeating channels.
@@ -81,10 +96,14 @@ class Csprng:
         # self.total_num_channels * self.L
         self.start_ind = [0] + [s * self.L for s in self.shares[:-1]]
         self.ind_increments = [s * self.L for s in self.shares]
-        self.end_ind = [s + e for s, e in zip(self.start_ind, self.ind_increments)]
+        self.end_ind = [
+            s + e for s, e in zip(self.start_ind, self.ind_increments)
+        ]
 
         # Total increment to add to counters after each random bytes generation.
-        self.inc = (self.total_num_channels + self.num_repeating_channels) * self.L
+        self.inc = (
+            self.total_num_channels + self.num_repeating_channels
+        ) * self.L
         self.repeating_start = self.total_num_channels * self.L
 
         # expand 32-byte k.
@@ -94,8 +113,13 @@ class Csprng:
         for device in self.devices:
             str_constant = torch.tensor(
                 [
-                    str2ord(b'expa'), str2ord(b'nd 3'), str2ord(b'2-by'), str2ord(b'te k')
-                ], device=device, dtype=torch.int64
+                    str2ord(b"expa"),
+                    str2ord(b"nd 3"),
+                    str2ord(b"2-by"),
+                    str2ord(b"te k"),
+                ],
+                device=device,
+                dtype=torch.int64,
             )
             self.nothing_up_my_sleeve.append(str_constant)
 
@@ -103,31 +127,34 @@ class Csprng:
         self.states = []
         for dev_id in range(self.num_devices):
             state_size = (
-                (self.shares[dev_id] + self.num_repeating_channels) * self.L, 16)
+                (self.shares[dev_id] + self.num_repeating_channels) * self.L,
+                16,
+            )
             state = torch.zeros(
-                state_size,
-                dtype=torch.int64,
-                device=self.devices[dev_id]
+                state_size, dtype=torch.int64, device=self.devices[dev_id]
             )
             self.states.append(state)
 
         # Prepare a channeled views.
         self.channeled_states = [
             self.states[i].view(
-                self.shares[i] + self.num_repeating_channels,
-                self.L, -1) for i in range(self.num_devices)
+                self.shares[i] + self.num_repeating_channels, self.L, -1
+            )
+            for i in range(self.num_devices)
         ]
 
         # The counter.
         self.counters = []
         repeating_counter = list(range(self.repeating_start, self.inc))
         for dev_id in range(self.num_devices):
-            counter = list(range(
-                self.start_ind[dev_id], self.end_ind[dev_id])) + repeating_counter
+            counter = (
+                list(range(self.start_ind[dev_id], self.end_ind[dev_id]))
+                + repeating_counter
+            )
 
-            counter_tensor = torch.tensor(counter,
-                                          dtype=torch.int64,
-                                          device=self.devices[dev_id])
+            counter_tensor = torch.tensor(
+                counter, dtype=torch.int64, device=self.devices[dev_id]
+            )
             self.counters.append(counter_tensor)
 
         self.refresh(seed, nonce)
@@ -144,7 +171,6 @@ class Csprng:
             self.initialize_states(dev_id, seed, nonce)
 
     def initialize_states(self, dev_id, seed=None, nonce=None):
-
         state = self.states[dev_id]
         state.zero_()
 
@@ -169,22 +195,19 @@ class Csprng:
             n_keys = nbytes // part_bytes
             hex2int = lambda x, nbytes: int(binascii.hexlify(x), 16)
             seed0 = [
-                hex2int(os.urandom(part_bytes), part_bytes) for _ in range(n_keys)
+                hex2int(os.urandom(part_bytes), part_bytes)
+                for _ in range(n_keys)
             ]
             for dev_id in range(self.num_devices):
                 cuda_seed = torch.tensor(
-                    seed0,
-                    dtype=torch.int64,
-                    device=self.devices[dev_id]
+                    seed0, dtype=torch.int64, device=self.devices[dev_id]
                 )
                 seeds.append(cuda_seed)
         else:
             seed0 = seed
             for dev_id in range(self.num_devices):
                 cuda_seed = torch.tensor(
-                    seed0,
-                    dtype=torch.int64,
-                    device=self.devices[dev_id]
+                    seed0, dtype=torch.int64, device=self.devices[dev_id]
                 )
                 seeds.append(cuda_seed)
         return seeds
@@ -215,7 +238,8 @@ class Csprng:
             start_channel = self.shares[devi] - shares[devi]
             end_channel = self.shares[devi] + repeats
             device_states = self.channeled_states[devi][
-                            start_channel:end_channel, :L, :]
+                start_channel:end_channel, :L, :
+            ]
             target_states.append(device_states.view(-1, 16))
 
         # Derive random bytes.
@@ -246,7 +270,7 @@ class Csprng:
 
         # Convert the amax list to contiguous numpy array pointers.
         q_conti = [np.ascontiguousarray(q, dtype=np.uint64) for q in amax]
-        q_ptr = [q.__array_interface__['data'][0] for q in q_conti]
+        q_ptr = [q.__array_interface__["data"][0] for q in q_conti]
 
         # Set the target states.
         target_states = []
@@ -254,17 +278,18 @@ class Csprng:
             start_channel = self.shares[devi] - shares[devi]
             end_channel = self.shares[devi] + repeats
             device_states = self.channeled_states[devi][
-                            start_channel:end_channel, :L, :]
+                start_channel:end_channel, :L, :
+            ]
             target_states.append(device_states)
 
         # Generate the randint.
         rand_int = randint_cuda.randint_fast(
-            target_states, q_ptr, shift, self.inc)
+            target_states, q_ptr, shift, self.inc
+        )
 
         return rand_int
 
     def discrete_gaussian(self, non_repeats=0, repeats=1, length=None):
-
         if not isinstance(non_repeats, (list, tuple)):
             shares = [non_repeats] * self.num_devices
         else:
@@ -281,15 +306,18 @@ class Csprng:
             start_channel = self.shares[devi] - shares[devi]
             end_channel = self.shares[devi] + repeats
             device_states = self.channeled_states[devi][
-                            start_channel:end_channel, :L, :]
+                start_channel:end_channel, :L, :
+            ]
             target_states.append(device_states.view(-1, 16))
 
         # Generate the randint.
-        rand_int = discrete_gaussian_cuda.discrete_gaussian_fast(target_states,
-                                                                 self.btree_ptr,
-                                                                 self.btree_size,
-                                                                 self.tree_depth,
-                                                                 self.inc)
+        rand_int = discrete_gaussian_cuda.discrete_gaussian_fast(
+            target_states,
+            self.btree_ptr,
+            self.btree_size,
+            self.tree_depth,
+            self.inc,
+        )
         # Reformat the rand_int.
         rand_int = [ri.view(-1, self.num_coefs) for ri in rand_int]
 
@@ -300,7 +328,8 @@ class Csprng:
         coef must reside in the fist GPU in the GPUs list"""
 
         L = self.num_coefs // 16
-        rand_bytes = chacha20_cuda.chacha20(
-            (self.states[0][:L],), self.inc)[0].ravel()
+        rand_bytes = chacha20_cuda.chacha20((self.states[0][:L],), self.inc)[
+            0
+        ].ravel()
         randround_cuda.randround([coef], [rand_bytes])
         return rand_bytes

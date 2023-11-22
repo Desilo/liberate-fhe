@@ -3,12 +3,12 @@ from matplotlib import pyplot as plt
 
 
 def random_complex_array(
-        n: int = 2 ** 8,
-        amin: int = -(2 ** 20),
-        amax: int = 2 ** 20,
-        decimal_exponent: int = 10,
+    n: int = 2**8,
+    amin: int = -(2**20),
+    amax: int = 2**20,
+    decimal_exponent: int = 10,
 ):
-    base = 10 ** decimal_exponent
+    base = 10**decimal_exponent
     a = np.random.randint(amin * base, amax * base, n) / base
     b = np.random.randint(amin * base, amax * base, n) / base
     ret = a + b * 1j
@@ -34,7 +34,7 @@ def check_errors(test_message, test_message_dec, idx=10, title="errors"):
 
 
 def absmax_error(x, y):
-    if type(x[0]) == np.complex128 and type(y[0]) == np.complex128:
+    if type(x[0]) is np.complex128 and type(y[0]) is np.complex128:
         r = np.abs(x.real - y.real).max() + np.abs(x.imag - y.imag).max() * 1j
     else:
         r = np.abs(np.array(x) - np.array(y)).max()

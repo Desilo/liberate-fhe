@@ -6,6 +6,5 @@ origins = {
     "galk": "galois key",
     "conjk": "conjugation key",
     "ct": "cipher text",
-    "ctt": "cipher text triplet"
-
+    "ctt": "cipher text triplet",
 }

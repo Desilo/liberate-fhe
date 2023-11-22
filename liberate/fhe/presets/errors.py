@@ -1,5 +1,5 @@
-from functools import wraps
 import logging
+from functools import wraps
 
 
 def log_error(func):
@@ -98,7 +98,9 @@ class NotFindBufferBitLength(Exception):
 
 class SecretKeyNotIncludeSpecialPrime(Exception):
     def __init__(self):
-        self.message_error = f"""The input secret key must include special prime channels."""
+        self.message_error = (
+            f"""The input secret key must include special prime channels."""
+        )
         super().__init__(self.message_error)
 
     def __repr__(self):
@@ -157,7 +159,9 @@ maximum : {level_max:2d}, now : {level:2d}""".strip()
 
 class DeviceSelectError(Exception):
     def __init__(self):
-        self.message_error = "To download data to the CPU, it must already be in a GPU!!!"
+        self.message_error = (
+            "To download data to the CPU, it must already be in a GPU!!!"
+        )
 
     def __repr__(self):
         return repr(self.message_error)
