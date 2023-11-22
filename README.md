@@ -1,5 +1,7 @@
 # Welcome to Liberate.FHE!
 
+![Liberate Logo](https://github.com/Desilo/liberate/blob/cf11bcc3e7a768687c4469b64cf693cf424fec37/docs/images/Logo%20Liberate.FHE.png)
+
 Liberate.FHE is an open-source Fully Homomorphic Encryption (FHE) library for bridging the gap between theory and practice with a focus on performance and accuracy. 
 
 Despite significant advancements in fully homomorphic encryption (FHE), the utilization of modern computing resources, such as GPU acceleration, remains limited. Additionally, the accuracy of homomorphic computations often falls short of theoretical expectations. To address these shortcomings, Liberate.FHE adopts a practical engineering approach, refining existing formulations to enhance FHE performance and accuracy. Leveraging these advancements, a new FHE library is developed.
