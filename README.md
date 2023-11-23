@@ -1,17 +1,12 @@
 # Welcome to Liberate.FHE!
 
-Liberate.FHE is an open-source Fully Homomorphic Encryption (FHE) library for bridging the gap between theory and
-practice with a focus on performance and accuracy.
+Liberate.FHE is an open-source Fully Homomorphic Encryption (FHE) library for bridging the gap between theory and practice with a focus on performance and accuracy.
 
-Despite significant advancements in fully homomorphic encryption (FHE), the utilization of modern computing resources,
-such as GPU acceleration, remains limited. Additionally, the accuracy of homomorphic computations often falls short of
-theoretical expectations. To address these shortcomings, Liberate.FHE adopts a practical engineering approach, refining
-existing formulations to enhance FHE performance and accuracy. Leveraging these advancements, a new FHE library is
-developed.
+Liberate.FHE is designed to be user-friendly while delivering robust performance, high accuracy, and a comprehensive suite of convenient APIs for developing real-world privacy-preserving applications.
 
-Liberate.FHE supports multi-GPU operations natively, and its Application Programming Interface (API) is designed to be
-simple by employing the most widely used presets. The main idea behind the design decisions is that non-cryptographers
-can use the library; it should be easily hackable and integrated with more extensive software frameworks.
+Liberate.FHE is a pure Python and CUDA implementation of FHE. So, Liberate.FHE supports multi-GPU operations natively.
+
+The main idea behind the design decisions is that non-cryptographers can use the library; it should be easily hackable and integrated with more extensive software frameworks. 
 
 Additionally, several design decisions were made to maximize the usability of the developed software:
 
@@ -108,7 +103,7 @@ instructions, examples, and documentation.
 # Features To Be Supported
 
 - CKKS bootstrapping
-- LIBERATE.FHE CPU version
+- Liberate.FHE CPU version
 
 # License
 
