@@ -25,7 +25,7 @@ exclude = [
     "src/liberate/csprng/*.h",
     "src/liberate/ntt/*.cpp",
     "src/liberate/ntt/*.cu",
-    "liberate/ntt/setup.py"
+    "src/liberate/ntt/setup.py"
 ]
 include = [
     "src/liberate/csprng/*.so",
