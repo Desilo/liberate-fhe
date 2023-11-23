@@ -1,0 +1,75 @@
+[tool.poetry]
+name = "liberate-fhe"
+version = "v0.9.0"
+description = "A Fully Homomorphic Encryption (FHE) library for bridging the gap between theory and practice with a focus on performance and accuracy"
+authors = [
+    "Juwhan Kim <juwhan.kim@desilo.ai>",
+    "Hanyul Ryu <hanyul.ryu@desilo.ai>"
+]
+maintainers = [
+    "Juwhan Kim <juwhan.kim@desilo.ai>",
+    "Hanyul Ryu <hanyul.ryu@desilo.ai>"
+]
+readme = [
+    "README.md"
+]
+homepage = "https://desilo.ai/"
+documentation = "https://docs.desilo.ai/liberate-fhe/"
+repository = "https://github.com/desilo/liberate"
+license = "BSD-3-Clause-Clear"
+keywords = [
+    "DESILO", "python", "cryptohraphy", "privacy", "encryption", "cuda",
+    "homoomrphic encryption", "homomorphic encryption library", "fhe", "gpu accelerated", "liberate"
+]
+classifiers = [
+    "Environment :: GPU :: NVIDIA CUDA",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python",
+    "Topic :: Software Development :: Libraries"
+]
+packages = [
+    { include = "liberate", from = "src" },
+]
+exclude = [
+    "src/liberate/csprng/setup.py",
+    "src/liberate/csprng/*.cu",
+    "src/liberate/csprng/*.cpp",
+    "src/liberate/csprng/*.h",
+    "src/liberate/ntt/*.cpp",
+    "src/liberate/ntt/*.cu",
+    "src/liberate/ntt/setup.py"
+]
+include = [
+    "src/liberate/csprng/*.so",
+    "src/liberate/ntt/*.so"
+]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+numpy = "^1.23.5"
+mpmath = "^1.3.0"
+scipy = "^1.10.1"
+matplotlib = "^3.7.1"
+joblib = "^1.2.0"
+torch = "^2.0.0"
+tqdm = "^4.66.1"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
+devtools = "^0.10.0"
+flake8 = "^6.0.0"
+isort = "^5.12.0"
+pytest = "^7.2.1"
+pytest-xdist = "^3.2.0"
+
+[build-system]
+requires = ["poetry-core", "torch", "setuptools"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+target-version = ['py310']
+line-length = 79
+
+[tool.isort]
+profile = "black"
+line_length = 79

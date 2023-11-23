@@ -543,7 +543,6 @@ Cargo.lock
 ###########################
 .python-version
 *.so
-*.lock
 etc
-cache
+#cache
 *.ipynb
