@@ -1,1 +1,1 @@
-from .encdec import conjugate, decode, encode, rotate
+from .encdec import decode, encode, rotate, conjugate

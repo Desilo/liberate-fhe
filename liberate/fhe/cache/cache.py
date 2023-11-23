@@ -1,6 +1,5 @@
 import glob
 import os
-
 from ..context import generate_primes
 
 path_cache = os.path.abspath(__file__).replace("cache.py", "resources")
