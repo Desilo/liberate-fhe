@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "liberate"
+name = "liberate-fhe"
 version = "v0.9.0"
 description = "A Fully Homomorphic Encryption (FHE) library for bridging the gap between theory and practice with a focus on performance and accuracy"
 authors = [
