@@ -100,10 +100,6 @@ pip install .
 Please refer to [Liberate.FHE](https://docs.desilo.ai/liberate-fhe/api-references/docs) for detailed installation
 instructions, examples, and documentation.
 
-# Features To Be Supported
-
-- CKKS bootstrapping
-- Liberate.FHE CPU version
 
 # How to Cite Liberate.FHE
 
