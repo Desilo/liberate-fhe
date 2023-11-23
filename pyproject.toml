@@ -19,17 +19,17 @@ repository = "https://github.com/desilo/liberate"
 license = "BSD-3-Clause-Clear"
 keywords = ["DESILO", "liberate", "homomorphic encryption", "CKKS", "random number generation"]
 exclude = [
-    "liberate/csprng/setup.py",
-    "liberate/csprng/*.cu",
-    "liberate/csprng/*.cpp",
-    "liberate/csprng/*.h",
-    "liberate/ntt/*.cpp",
-    "liberate/ntt/*.cu",
+    "src/liberate/csprng/setup.py",
+    "src/liberate/csprng/*.cu",
+    "src/liberate/csprng/*.cpp",
+    "src/liberate/csprng/*.h",
+    "src/liberate/ntt/*.cpp",
+    "src/liberate/ntt/*.cu",
     "liberate/ntt/setup.py"
 ]
 include = [
-    "liberate/csprng/*.so",
-    "liberate/ntt/*.so"
+    "src/liberate/csprng/*.so",
+    "src/liberate/ntt/*.so"
 ]
 
 [tool.poetry.dependencies]
