@@ -13,8 +13,9 @@ maintainers = [
 readme = [
     "README.md"
 ]
-homepage = "https://github.com/Desilo/Liberate"
-documentation = "https://github.com/Desilo/Liberate"
+homepage = "https://desilo.ai/"
+documentation = "https://docs.desilo.ai/liberate-fhe/"
+repository = "https://github.com/desilo/liberate"
 license = "BSD-3-Clause-Clear"
 keywords = ["DESILO", "liberate", "homomorphic encryption", "CKKS", "random number generation"]
 exclude = [
