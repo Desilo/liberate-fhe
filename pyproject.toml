@@ -17,7 +17,16 @@ homepage = "https://desilo.ai/"
 documentation = "https://docs.desilo.ai/liberate-fhe/"
 repository = "https://github.com/desilo/liberate"
 license = "BSD-3-Clause-Clear"
-keywords = ["DESILO", "liberate", "homomorphic encryption", "CKKS", "random number generation"]
+keywords = [
+    "DESILO", "python", "cryptohraphy", "privacy", "encryption", "cuda",
+    "homoomrphic encryption", "homomorphic encryption library", "fhe", "gpu accelerated", "liberate"
+]
+classifiers = [
+    "Environment :: GPU :: NVIDIA CUDA",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python",
+    "Topic :: Software Development :: Libraries"
+]
 packages = [
     { include = "liberate", from = "src" },
 ]
