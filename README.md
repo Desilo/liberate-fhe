@@ -101,7 +101,7 @@ Please refer to [Liberate.FHE](https://docs.desilo.ai/liberate-fhe/api-reference
 instructions, examples, and documentation.
 
 
-# How to Cite Liberate.FHE
+# Citing Liberate.FHE
 
 ```text
 @Misc{Liberate_FHE,
@@ -114,4 +114,4 @@ instructions, examples, and documentation.
 
 # License
 
-- Liberate.FHE is available under the *BSD 3-Clause Clear license*. If you have any questions, please contact us at hello@desilo.ai.
+- Liberate.FHE is available under the *BSD 3-Clause Clear license*. If you have any questions, please contact us at contact@desilo.ai.
