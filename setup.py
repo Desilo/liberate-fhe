@@ -5,29 +5,29 @@ ext_modules = [
     CUDAExtension(
         name="randint_cuda",
         sources=[
-            "liberate/csprng/randint.cpp",
-            "liberate/csprng/randint_cuda_kernel.cu",
+            "src/liberate/csprng/randint.cpp",
+            "src/liberate/csprng/randint_cuda_kernel.cu",
         ],
     ),
     CUDAExtension(
         name="randround_cuda",
         sources=[
-            "liberate/csprng/randround.cpp",
-            "liberate/csprng/randround_cuda_kernel.cu",
+            "src/liberate/csprng/randround.cpp",
+            "src/liberate/csprng/randround_cuda_kernel.cu",
         ],
     ),
     CUDAExtension(
         name="discrete_gaussian_cuda",
         sources=[
-            "liberate/csprng/discrete_gaussian.cpp",
-            "liberate/csprng/discrete_gaussian_cuda_kernel.cu",
+            "src/liberate/csprng/discrete_gaussian.cpp",
+            "src/liberate/csprng/discrete_gaussian_cuda_kernel.cu",
         ],
     ),
     CUDAExtension(
         name="chacha20_cuda",
         sources=[
-            "liberate/csprng/chacha20.cpp",
-            "liberate/csprng/chacha20_cuda_kernel.cu",
+            "src/liberate/csprng/chacha20.cpp",
+            "src/liberate/csprng/chacha20_cuda_kernel.cu",
         ],
     ),
 ]
@@ -36,8 +36,8 @@ ext_modules_ntt = [
     CUDAExtension(
         name="ntt_cuda",
         sources=[
-            "liberate/ntt/ntt.cpp",
-            "liberate/ntt/ntt_cuda_kernel.cu",
+            "src/liberate/ntt/ntt.cpp",
+            "src/liberate/ntt/ntt_cuda_kernel.cu",
         ],
     )
 ]
@@ -50,7 +50,7 @@ if __name__ == "__main__":
         script_args=["build_ext"],
         options={
             "build": {
-                "build_lib": "liberate/csprng",
+                "build_lib": "src/liberate/csprng",
             }
         },
     )
@@ -62,7 +62,8 @@ if __name__ == "__main__":
         cmdclass={"build_ext": BuildExtension},
         options={
             "build": {
-                "build_lib": "liberate/ntt",
+                "build_lib": "src/liberate/ntt",
             }
         },
     )
+
