@@ -13,7 +13,7 @@ Additionally, several design decisions were made to maximize the usability of th
 - Make the number of dependencies minimal.
 - Make the software easily hackable.
 - Set the usage of multiple GPUs as the default.
-- Make the resulting library easily integrated with the pre-existing software, especially the Artificial Intelligence (
+- Make the resulting library easily integrated with the pre-existing software, especially Artificial Intelligence (
   AI) related ones.
 
 # Key Features
@@ -29,7 +29,7 @@ Additionally, several design decisions were made to maximize the usability of th
 from liberate import fhe
 from liberate.fhe import presets
 
-# Generate ckks engine with preseting parameter
+# Generate CKKS engine with preset parameters
 grade = "silver"  # logN=14
 params = presets.params[grade]
 
@@ -105,10 +105,17 @@ instructions, examples, and documentation.
 - CKKS bootstrapping
 - Liberate.FHE CPU version
 
+# How to Cite Liberate.FHE
+
+```text
+@Misc{Liberate_FHE,
+  title={{Liberate.FHE: A New FHE Library for Bridging the Gap between Theory and Practice with a Focus on Performance and Accuracy}},
+  author={DESILO},
+  year={2023},
+  note={\url{https://github.com/Desilo/liberate}},
+}
+```
+
 # License
 
-- Liberate.FHE is available under the *BSD 3-Clause Clear license*.
-
-# Support
-
-- Support forum : TBD
+- Liberate.FHE is available under the *BSD 3-Clause Clear license*. If you have any questions, please contact us at hello@desilo.ai.
