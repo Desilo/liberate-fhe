@@ -108,7 +108,7 @@ instructions, examples, and documentation.
   title={{Liberate.FHE: A New FHE Library for Bridging the Gap between Theory and Practice with a Focus on Performance and Accuracy}},
   author={DESILO},
   year={2023},
-  note={\url{https://github.com/Desilo/liberate}},
+  note={\url{https://github.com/Desilo/liberate-fhe}},
 }
 ```
 
