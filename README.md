@@ -13,8 +13,7 @@ Additionally, several design decisions were made to maximize the usability of th
 - Make the number of dependencies minimal.
 - Make the software easily hackable.
 - Set the usage of multiple GPUs as the default.
-- Make the resulting library easily integrated with the pre-existing software, especially Artificial Intelligence (
-  AI) related ones.
+- Make the resulting library easily integrated with the pre-existing software, especially Artificial Intelligence (AI) related ones.
 
 # Key Features
 
