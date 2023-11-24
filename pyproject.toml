@@ -15,7 +15,7 @@ readme = [
 ]
 homepage = "https://desilo.ai/"
 documentation = "https://docs.desilo.ai/liberate-fhe/"
-repository = "https://github.com/desilo/liberate"
+repository = "https://github.com/desilo/liberate-fhe"
 license = "BSD-3-Clause-Clear"
 keywords = [
     "DESILO", "python", "cryptohraphy", "privacy", "encryption", "cuda",
