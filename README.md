@@ -65,7 +65,8 @@ the [official documentation](https://docs.desilo.ai/liberate-fhe/getting-started
 ### Clone this repository
 
 ```shell
-git clone https://github.com/Desilo/liberate.git
+git clone https://github.com/Desilo/liberate-fhe.git
+cd liberate-fhe
 ```
 
 ### Install dependencies
