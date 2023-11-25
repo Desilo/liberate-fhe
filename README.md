@@ -29,7 +29,7 @@ from liberate import fhe
 from liberate.fhe import presets
 
 # Generate CKKS engine with preset parameters
-grade = "silver"  # logN=14
+grade = "silver"  # logN=15
 params = presets.params[grade]
 
 engine = fhe.ckks_engine(**params, verbose=True)
