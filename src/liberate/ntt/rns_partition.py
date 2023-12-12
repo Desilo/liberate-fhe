@@ -56,12 +56,6 @@ class rns_partition:
         self.num_scales = self.num_ordinary_primes - 1
 
         self.base_prime_idx = self.num_ordinary_primes - 1
-        self.special_prime_idx = list(
-            range(
-                self.num_ordinary_primes + 1,
-                self.num_ordinary_primes + 1 + self.num_special_primes,
-            )
-        )
 
         self.compute_destination_arrays()
         self.compute_rescaler_locations()
