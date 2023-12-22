@@ -3,7 +3,6 @@ params = {
         "logN": 14,
         "num_special_primes": 1,
         "devices": [0],
-        "bias_guard": False,
         "scale_bits": 40,
         "num_scales": None,
     },
