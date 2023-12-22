@@ -49,12 +49,6 @@ class ckks_engine:
         self.ctx = ckks_context(**ctx_params)
         self.ntt = ntt_context(self.ctx, devices=devices, verbose=verbose)
 
-        if self.bias_guard:
-            if self.ctx.num_special_primes < 2:
-                raise errors.NotEnoughPrimesForBiasGuard(
-                    bias_guard=self.bias_guard,
-                    num_special_primes=self.ctx.num_special_primes)
-
         self.num_levels = self.ntt.num_levels - 1
 
         self.num_slots = self.ctx.N // 2
