@@ -2316,9 +2316,9 @@ class ckks_engine:
         return new_ct
 
     def cov(self, ct_a: data_struct, ct_b: data_struct,
-            evk: data_struct, gk: data_struct, rescale_every=5) -> data_struct:
-        cta_mean = self.mean(ct_a, gk, rescale_every=rescale_every)
-        ctb_mean = self.mean(ct_b, gk, rescale_every=rescale_every)
+            evk: data_struct, gk: data_struct) -> data_struct:
+        cta_mean = self.mean(ct_a, gk)
+        ctb_mean = self.mean(ct_b, gk)
 
         cta_dev = self.sub(ct_a, cta_mean)
         ctb_dev = self.sub(ct_b, ctb_mean)
