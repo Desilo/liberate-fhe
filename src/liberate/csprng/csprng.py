@@ -230,7 +230,7 @@ class Csprng:
         if length is None:
             L = self.L
         else:
-            L = length
+            L = length // 16
 
         # Set the target states.
         target_states = []
@@ -261,7 +261,7 @@ class Csprng:
         if length is None:
             L = self.L
         else:
-            L = length
+            L = length // 4
 
         # Calculate shares.
         # If repeats are greater than 0, those channels are
@@ -298,7 +298,7 @@ class Csprng:
         if length is None:
             L = self.L
         else:
-            L = length
+            L = length // 4
 
         # Set the target states.
         target_states = []
