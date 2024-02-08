@@ -1,7 +1,7 @@
 import datetime
 import gc
 import math
-import pickle
+import _pickle as pickle
 from hashlib import sha256
 from pathlib import Path
 
