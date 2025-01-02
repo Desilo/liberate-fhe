@@ -157,7 +157,7 @@ class ckks_context:
             num_scales=None,
             num_special_primes=2,
             sigma=3.2,
-            uniform_tenary_secret=True,
+            uniform_ternary_secret=True,
             cache_folder=CACHE_FOLDER,
             security_bits=128,
             quantum="post_quantum",
@@ -203,11 +203,11 @@ class ckks_context:
         self.distribution = distribution
         # Sampling strategy.
         self.sigma = sigma
-        self.uniform_tenary_secret = uniform_tenary_secret
-        if self.uniform_tenary_secret:
-            self.secret_key_sampling_method = "uniform tenary"
+        self.uniform_ternary_secret = uniform_ternary_secret
+        if self.uniform_ternary_secret:
+            self.secret_key_sampling_method = "uniform ternary"
         else:
-            self.secret_key_sampling_method = "sparse tenary"
+            self.secret_key_sampling_method = "sparse ternary"
 
         # dtypes.
         self.torch_dtype = {30: torch.int32, 62: torch.int64}[

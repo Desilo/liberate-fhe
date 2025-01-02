@@ -30,7 +30,7 @@ class ckks_engine:
             num_scales=None,
             num_special_primes=2,
             sigma=3.2,
-            uniform_tenary_secret=True,
+            uniform_ternary_secret=True,
             cache_folder='cache/',
             security_bits=128,
             quantum='post_quantum',
