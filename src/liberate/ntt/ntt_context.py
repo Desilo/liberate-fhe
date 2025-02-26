@@ -4,6 +4,7 @@ import time
 import numpy as np
 import torch
 
+from liberate.fhe.context.ckks_context import CkksContext
 from liberate.fhe.presets import errors
 
 from . import ntt_cuda
@@ -11,9 +12,13 @@ from .rns_partition import rns_partition
 
 
 @errors.log_error
-class ntt_context:
+class NTTContext:
     def __init__(
-        self, ctx, index_type=torch.int32, devices=None, verbose=False
+        self,
+        ctx: CkksContext,
+        index_type=torch.int32,
+        devices=None,
+        verbose=False,
     ):
         # Mark the start time.
         t0 = time.time()
@@ -29,21 +34,20 @@ class ntt_context:
 
         # Transfer input parameters.
         self.index_type = index_type
-        self.verbose = verbose
-        self.ctx = ctx
+        self.ckksCtx = ctx
 
-        if self.verbose:
+        if verbose:
             print(
                 f"[{str(datetime.datetime.now())}] I have received the context:\n"
             )
-            self.ctx.init_print()
+            self.ckksCtx.init_print()
             print(
                 f"[{str(datetime.datetime.now())}] Requested devices for computation are {self.devices}."
             )
 
-        self.num_ordinary_primes = self.ctx.num_scales + 1
-        self.num_special_primes = self.ctx.num_special_primes
-        self.num_levels = self.ctx.num_scales + 1
+        self.num_ordinary_primes = self.ckksCtx.num_scales + 1
+        self.num_special_primes = self.ckksCtx.num_special_primes
+        self.num_levels = self.ckksCtx.num_scales + 1
 
         self.p = rns_partition(
             self.num_ordinary_primes, self.num_special_primes, self.num_devices
@@ -93,7 +97,7 @@ class ntt_context:
     # -------------------------------------------------------------------------------------------------
 
     def partition_variable(self, variable):
-        np_v = np.array(variable, dtype=self.ctx.numpy_dtype)
+        np_v = np.array(variable, dtype=self.ckksCtx.numpy_dtype)
 
         v_special = []
         dest = self.p.d_special
@@ -131,32 +135,32 @@ class ntt_context:
 
     def Ninv_enter(self):
         self.Ninv = [
-            (self.ctx.N_inv[i] * self.ctx.R) % self.ctx.q[i]
-            for i in range(len(self.ctx.q))
+            (self.ckksCtx.N_inv[i] * self.ckksCtx.R) % self.ckksCtx.q[i]
+            for i in range(len(self.ckksCtx.q))
         ]
 
     def prepare_parameters(self):
-        scale = 2**self.ctx.scale_bits
+        scale = 2**self.ckksCtx.scale_bits
         self.Rs_scale = self.partition_variable(
-            [(Rs * scale) % q for Rs, q in zip(self.ctx.R_square, self.ctx.q)]
+            [(Rs * scale) % q for Rs, q in zip(self.ckksCtx.R_square, self.ckksCtx.q)]
         )
 
-        self.Rs = self.partition_variable(self.ctx.R_square)
+        self.Rs = self.partition_variable(self.ckksCtx.R_square)
 
-        self.q = self.partition_variable(self.ctx.q)
-        self._2q = self.partition_variable(self.ctx.q_double)
-        self.ql = self.partition_variable(self.ctx.q_lower_bits)
-        self.qh = self.partition_variable(self.ctx.q_higher_bits)
-        self.kl = self.partition_variable(self.ctx.k_lower_bits)
-        self.kh = self.partition_variable(self.ctx.k_higher_bits)
+        self.q = self.partition_variable(self.ckksCtx.q)
+        self._2q = self.partition_variable(self.ckksCtx.q_double)
+        self.ql = self.partition_variable(self.ckksCtx.q_lower_bits)
+        self.qh = self.partition_variable(self.ckksCtx.q_higher_bits)
+        self.kl = self.partition_variable(self.ckksCtx.k_lower_bits)
+        self.kh = self.partition_variable(self.ckksCtx.k_higher_bits)
 
-        self.even = self.copy_to_devices(self.ctx.forward_even_indices)
-        self.odd = self.copy_to_devices(self.ctx.forward_odd_indices)
-        self.ieven = self.copy_to_devices(self.ctx.backward_even_indices)
-        self.iodd = self.copy_to_devices(self.ctx.backward_odd_indices)
+        self.even = self.copy_to_devices(self.ckksCtx.forward_even_indices)
+        self.odd = self.copy_to_devices(self.ckksCtx.forward_odd_indices)
+        self.ieven = self.copy_to_devices(self.ckksCtx.backward_even_indices)
+        self.iodd = self.copy_to_devices(self.ckksCtx.backward_odd_indices)
 
-        self.psi = self.partition_variable(self.ctx.forward_psi)
-        self.ipsi = self.partition_variable(self.ctx.backward_psi_inv)
+        self.psi = self.partition_variable(self.ckksCtx.forward_psi)
+        self.ipsi = self.partition_variable(self.ckksCtx.backward_psi_inv)
 
         self.Ninv_enter()
         self.Ninv = self.partition_variable(self.Ninv)
@@ -297,10 +301,10 @@ class ntt_context:
 
                     if len(key) > 0:
                         if key not in self.parts_pack[device_id]:
-                            self.parts_pack[device_id][
-                                key
-                            ] = self.params_pack_device(
-                                device_id, astart, astop
+                            self.parts_pack[device_id][key] = (
+                                self.params_pack_device(
+                                    device_id, astart, astop
+                                )
                             )
 
                 for p in self.p.p_special[level][device_id]:
@@ -308,9 +312,9 @@ class ntt_context:
                     if key not in self.parts_pack[device_id].keys():
                         astart = p[0]
                         astop = p[-1]
-                        self.parts_pack[device_id][
-                            key
-                        ] = self.params_pack_device(device_id, astart, astop)
+                        self.parts_pack[device_id][key] = (
+                            self.params_pack_device(device_id, astart, astop)
+                        )
 
         for device_id in range(self.num_devices):
             for level in range(self.num_levels):
@@ -326,7 +330,7 @@ class ntt_context:
                         not in self.parts_pack[device_id][key].keys()
                     ):
                         alpha = len(part)
-                        m = [self.ctx.q[idx] for idx in part]
+                        m = [self.ckksCtx.q[idx] for idx in part]
                         L = [m[0]]
 
                         for i in range(1, alpha - 1):
@@ -336,14 +340,14 @@ class ntt_context:
                         L_scalar = []
                         for i in range(alpha - 1):
                             L_inv = pow(L[i], -1, m[i + 1])
-                            L_inv_R = (L_inv * self.ctx.R) % m[i + 1]
+                            L_inv_R = (L_inv * self.ckksCtx.R) % m[i + 1]
                             Y_scalar.append(L_inv_R)
 
                             if (i + 2) < alpha:
                                 L_scalar.append([])
                                 for j in range(i + 2, alpha):
                                     L_scalar[i].append(
-                                        (L[i] * self.ctx.R) % m[j]
+                                        (L[i] * self.ckksCtx.R) % m[j]
                                     )
 
                         L_enter_devices = []
@@ -351,8 +355,8 @@ class ntt_context:
                             dest = self.p.destination_arrays_with_special[0][
                                 target_device_id
                             ]
-                            q = [self.ctx.q[idx] for idx in dest]
-                            Rs = [self.ctx.R_square[idx] for idx in dest]
+                            q = [self.ckksCtx.q[idx] for idx in dest]
+                            Rs = [self.ckksCtx.R_square[idx] for idx in dest]
 
                             L_enter = []
                             for i in range(alpha - 1):
@@ -367,7 +371,7 @@ class ntt_context:
                         if len(Y_scalar) > 0:
                             Y_scalar = torch.tensor(
                                 Y_scalar,
-                                dtype=self.ctx.torch_dtype,
+                                dtype=self.ckksCtx.torch_dtype,
                                 device=device,
                             )
                             self.parts_pack[device_id][key][
@@ -380,7 +384,7 @@ class ntt_context:
                                 L_enter_devices[target_device_id] = [
                                     torch.tensor(
                                         Li,
-                                        dtype=self.ctx.torch_dtype,
+                                        dtype=self.ckksCtx.torch_dtype,
                                         device=target_device,
                                     )
                                     for Li in L_enter_devices[target_device_id]
@@ -400,7 +404,7 @@ class ntt_context:
                             L_scalar = [
                                 torch.tensor(
                                     Li,
-                                    dtype=self.ctx.torch_dtype,
+                                    dtype=self.ckksCtx.torch_dtype,
                                     device=device,
                                 )
                                 for Li in L_scalar
