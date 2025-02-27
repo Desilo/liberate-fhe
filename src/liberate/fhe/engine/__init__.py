@@ -1,4 +1,7 @@
-params = {
+from .ckks_engine import CkksEngine
+from . import extension
+
+presets = {
     "bronze": {
         "logN": 14,
         "num_special_primes": 1,
@@ -28,3 +31,5 @@ params = {
         "num_scales": None,
     },
 }
+
+__all__ = ["presets", "CkksEngine", "extension"]

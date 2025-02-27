@@ -9,7 +9,7 @@ import torch
 from .generate_primes import generate_message_primes, generate_scale_primes
 from .security_parameters import maximum_qbits
 from liberate.fhe.cache import cache
-from liberate.fhe.presets import errors
+from . import errors 
 
 # ------------------------------------------------------------------------------------------
 # NTT parameter pre-calculation.
@@ -147,7 +147,6 @@ def paint_butterfly_backward(logN):
 # ------------------------------------------------------------------------------------------
 
 
-@errors.log_error
 class CkksContext:
     def __init__(
             self,

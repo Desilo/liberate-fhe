@@ -1,9 +1,10 @@
-from .typing import *
-from .encdec import rotate
-from .presets import errors
+from liberate.fhe.typing import *
+from liberate.fhe.encdec import rotate
+from .. import errors
 from liberate.ntt import ntt_cuda
-from .ckks_engine import CkksEngine
-from .typing import *
+from ..ckks_engine import CkksEngine
+from liberate.fhe.typing import *
+from liberate.utils.mvc import strictype
 
 
 class CkksEngineMPCExtension(CkksEngine):
@@ -332,11 +333,13 @@ class CkksEngineMPCExtension(CkksEngine):
     ) -> GaloisKey:
         # if sk.origin != origin_names["sk"]:
         #     raise errors.NotMatchType(origin=sk.origin, to=origin_names["sk"])
+        
+        galois_deltas = [2**i for i in range(self.ctx.logN - 1)]
         galois_key_parts = [
             self.multiparty_create_rotation_key(
-                sk, self.galois_deltas[idx], a=a[idx]
+                sk, galois_deltas[idx], a=a[idx]
             )
-            for idx in range(len(self.galois_deltas))
+            for idx in range(len(galois_deltas))
         ]
 
         galois_key = GaloisKey(

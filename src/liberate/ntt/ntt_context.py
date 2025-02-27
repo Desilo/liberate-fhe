@@ -5,13 +5,11 @@ import numpy as np
 import torch
 
 from liberate.fhe.context.ckks_context import CkksContext
-from liberate.fhe.presets import errors
 
 from . import ntt_cuda
 from .rns_partition import rns_partition
 
 
-@errors.log_error
 class NTTContext:
     def __init__(
         self,
@@ -47,7 +45,6 @@ class NTTContext:
 
         self.num_ordinary_primes = self.ckksCtx.num_scales + 1
         self.num_special_primes = self.ckksCtx.num_special_primes
-        self.num_levels = self.ckksCtx.num_scales + 1
 
         self.p = rns_partition(
             self.num_ordinary_primes, self.num_special_primes, self.num_devices
@@ -91,6 +88,10 @@ class NTTContext:
 
         self.generate_parts_pack()
         self.pre_package()
+
+    @property
+    def num_levels(self) -> int:
+        return self.ckksCtx.num_scales + 1
 
     # -------------------------------------------------------------------------------------------------
     # Arrange according to partitioning scheme input variables, and copy to GPUs for fast access.
@@ -142,7 +143,10 @@ class NTTContext:
     def prepare_parameters(self):
         scale = 2**self.ckksCtx.scale_bits
         self.Rs_scale = self.partition_variable(
-            [(Rs * scale) % q for Rs, q in zip(self.ckksCtx.R_square, self.ckksCtx.q)]
+            [
+                (Rs * scale) % q
+                for Rs, q in zip(self.ckksCtx.R_square, self.ckksCtx.q)
+            ]
         )
 
         self.Rs = self.partition_variable(self.ckksCtx.R_square)

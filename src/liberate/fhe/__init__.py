@@ -1,4 +1,6 @@
 from . import context, encdec
-from .ckks_engine import CkksEngine
-from .presets import params
+from .engine import CkksEngine
+from .engine import presets
 from .cache import cache
+
+ckks_engine = CkksEngine  # alias legacy name

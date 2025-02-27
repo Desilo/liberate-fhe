@@ -15,7 +15,6 @@ class DataStruct:
     # montgomery_state: bool
     # origin: str
     # level: int
-    # hash: str
 
     def __init__(
         self,
@@ -24,7 +23,6 @@ class DataStruct:
         ntt_state: bool,
         montgomery_state: bool,
         level: int,
-        hash: str,
         description: str = None,
         *args,
         **kwargs,
@@ -37,15 +35,14 @@ class DataStruct:
         - montgomery_state: Boolean, whether if the data is in the Montgomery form or not.
         - origin: String, where did this data came from - cipher text, secret key, etc.
         - level: Integer, the current level where this data is situated.
-        - hash: String, a SHA256 hash of the input settings and the prime numbers used to RNS decompose numbers.
         - version: String, version number.
         """
+        # todo might need a engine identifier to know which engine created this data    
         self.data = data
         self.include_special = include_special
         self.ntt_state = ntt_state
         self.montgomery_state = montgomery_state
         self.level = level
-        self.hash = hash
         self.description = description
 
     @classmethod
@@ -92,7 +89,6 @@ class DataStruct:
             ntt_state=self.ntt_state,
             montgomery_state=self.montgomery_state,
             level=self.level,
-            hash=self.hash,
             description=self.description,
         )
 
@@ -110,7 +106,6 @@ class DataStruct:
             ntt_state=another.ntt_state,
             montgomery_state=another.montgomery_state,
             level=another.level,
-            hash=another.hash,
             description=another.description,
         )
 
@@ -200,7 +195,6 @@ class DataStruct:
             ntt_state=self.ntt_state,
             montgomery_state=self.montgomery_state,
             level=self.level,
-            hash=self.hash,
             description=self.description,
         )
 
@@ -209,7 +203,7 @@ class DataStruct:
         return self.to_device(device, non_blocking)
 
     def __repr__(self):
-        return f"{self.__class__.__name__}(data={self.data}, include_special={self.include_special}, ntt_state={self.ntt_state}, montgomery_state={self.montgomery_state}, level={self.level}, description={self.description}, hash={self.hash})"
+        return f"{self.__class__.__name__}(data={self.data}, include_special={self.include_special}, ntt_state={self.ntt_state}, montgomery_state={self.montgomery_state}, level={self.level}, description={self.description})"
 
     def __str__(self):
         return self.__repr__()  # todo for better readability
@@ -269,7 +263,7 @@ class ConjugationKey(DataStruct):
 # ================== #
 
 
-class Plaintext(DataStruct):
+class Plaintext:
     def __init__(
         self,
         src: Union[list, tuple],
@@ -280,74 +274,8 @@ class Plaintext(DataStruct):
         self.src = src
         self.cache = cache
 
-    def clone(self):
-        return Plaintext(
-            src=self.__class__.clone_tensor_recursive(self.src),
-            cache=self.__class__.clone_tensor_recursive(self.cache),
-        )
-
-    @property
-    def data(self):
-        raise NotImplementedError("data is not implemented for Plaintext")
-
-    @property
-    def include_special(self):
-        raise NotImplementedError(
-            "include_special is not implemented for Plaintext"
-        )
-
-    @property
-    def ntt_state(self):
-        raise NotImplementedError("ntt_state is not implemented for Plaintext")
-
-    @property
-    def montgomery_state(self):
-        raise NotImplementedError(
-            "montgomery_state is not implemented for Plaintext"
-        )
-
-    @property
-    def level(self):
-        raise NotImplementedError("level is not implemented for Plaintext")
-
-    @property
-    def hash(self):
-        raise NotImplementedError("hash is not implemented for Plaintext")
-
-# ================== #
-#  Helper Functions  #
-# ================== #
-
-
-def strictype(func):
-    """
-    A decorator that checks the types of the arguments passed to a function.
-    """
-
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        # Get type hints for the function
-        hints = typing.get_type_hints(func)
-        # Bind the passed arguments to the function signature
-        bound = inspect.signature(func).bind(*args, **kwargs)
-        bound.apply_defaults()
-
-        # Iterate over all arguments and check their types
-        for name, value in bound.arguments.items():
-            if name in hints:
-                expected_type = hints[name]
-                # print(expected_type)
-                try:
-                    _ = isinstance(value, expected_type)
-                except Exception:
-                    # logger.warning("error in strictype")
-                    pass  # todo TypeError: Subscripted generics cannot be used with class and instance checks
-                else:
-                    if not isinstance(value, expected_type):
-                        raise TypeError(
-                            f"Argument '{name}' must be of type {expected_type}, "
-                            f"but got {type(value)}."
-                        )
-        return func(*args, **kwargs)
-
-    return wrapper
+    def clone(self, clone_cache=True):
+        cls = self.__class__
+        src = cls.clone_tensor_recursive(self.src)
+        cache = cls.clone_tensor_recursive(self.cache) if clone_cache else {}
+        return cls(src=src, cache=cache)
