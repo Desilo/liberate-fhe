@@ -98,7 +98,9 @@ class NotFindBufferBitLength(Exception):
 
 class SecretKeyNotIncludeSpecialPrime(Exception):
     def __init__(self):
-        self.message_error = f"""The input secret key must include special prime channels."""
+        self.message_error = (
+            f"""The input secret key must include special prime channels."""
+        )
         super().__init__(self.message_error)
 
     def __repr__(self):
@@ -110,7 +112,9 @@ class SecretKeyNotIncludeSpecialPrime(Exception):
 
 class DifferentTypeError(Exception):
     def __init__(self, a, b):
-        self.message_error = f"""The data type are different. {a}, {b}"""
+        self.message_error = (
+            f"The type of two parameter should be the same, but they are '{a}' and '{b}'."
+        )
 
     def __repr__(self):
         return repr(self.message_error)
@@ -119,9 +123,30 @@ class DifferentTypeError(Exception):
         return self.message_error
 
 
-class NotMatchType(Exception):
-    def __init__(self, origin, to):
-        self.message_error = f"""The data_struct origin should be a '{to}', but it is '{origin}'."""
+# class NotMatchType(Exception):
+#     def __init__(self, origin, expected):
+#         self.message_error = f"""The data_struct origin should be a '{expected}', but it is '{origin}'."""
+
+#     def __repr__(self):
+#         return repr(self.message_error)
+
+#     def __str__(self):
+#         return self.message_error
+
+
+class NTTStateError(Exception):
+    def __init__(self, expected):
+        self.message_error = f"""The data_struct ntt_state should be a '{expected}', but it is '{not expected}'."""
+
+    def __repr__(self):
+        return repr(self.message_error)
+
+    def __str__(self):
+        return self.message_error
+    
+class MontgomeryStateError(Exception):
+    def __init__(self, expected):
+        self.message_error = f"""The data_struct montgomery_state should be a '{expected}', but it is '{not expected}'."""
 
     def __repr__(self):
         return repr(self.message_error)
@@ -129,24 +154,20 @@ class NotMatchType(Exception):
     def __str__(self):
         return self.message_error
 
+# class NotMatchDataStructState(Exception):
+#     def __init__(self, origin: str):
+#         self.message_error = f"""Wrong format of the source {origin} detected, \nApply ntt and the montgomery transformation to the data."""
 
-class NotMatchDataStructState(Exception):
-    def __init__(self, origin: str):
-        self.message_error = f"""Wrong format of the source {origin} detected, \nApply ntt and the montgomery transformation to the data."""
+#     def __repr__(self):
+#         return repr(self.message_error)
 
-    def __repr__(self):
-        return repr(self.message_error)
-
-    def __str__(self):
-        return self.message_error
+#     def __str__(self):
+#         return self.message_error
 
 
 class MaximumLevelError(Exception):
     def __init__(self, level, level_max):
-        self.message_error = f"""The number of multiplications available
-for this cipher text is fully depleted. 
-I cannot proceed further.
-maximum : {level_max:2d}, now : {level:2d}""".strip()
+        self.message_error = f"""The number of multiplications available for this cipher text is fully depleted. I cannot proceed further. maximum : {level_max:2d}, now : {level:2d}""".strip()
 
     def __repr__(self):
         return repr(self.message_error)
@@ -157,7 +178,9 @@ maximum : {level_max:2d}, now : {level:2d}""".strip()
 
 class DeviceSelectError(Exception):
     def __init__(self):
-        self.message_error = "To download data to the CPU, it must already be in a GPU!!!"
+        self.message_error = (
+            "To download data to the CPU, it must already be in a GPU!!!"
+        )
 
     def __repr__(self):
         return repr(self.message_error)

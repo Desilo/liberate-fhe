@@ -89,8 +89,8 @@ def get_psi(q, logN, my_dtype):
 def paint_butterfly_forward(logN):
     N = 2 ** logN
     t = N
-    painted_even = np.zeros((logN, N), dtype=np.bool8)
-    painted_odd = np.zeros((logN, N), dtype=np.bool8)
+    painted_even = np.zeros((logN, N), dtype=np.bool_)
+    painted_odd = np.zeros((logN, N), dtype=np.bool_)
     painted_psi = np.zeros((logN, N // 2), dtype=np.int32)
     for logm in range(logN):
         m = 2 ** logm
@@ -115,8 +115,8 @@ def paint_butterfly_forward(logN):
 def paint_butterfly_backward(logN):
     N = 2 ** logN
     t = 1
-    painted_even = np.zeros((logN, N), dtype=np.bool8)
-    painted_odd = np.zeros((logN, N), dtype=np.bool8)
+    painted_even = np.zeros((logN, N), dtype=np.bool_)
+    painted_odd = np.zeros((logN, N), dtype=np.bool_)
     painted_psi = np.zeros((logN, N // 2), dtype=np.int32)
     for logm in range(logN, 0, -1):
         level = logN - logm
@@ -148,7 +148,7 @@ def paint_butterfly_backward(logN):
 
 
 @errors.log_error
-class ckks_context:
+class CkksContext:
     def __init__(
             self,
             buffer_bit_length=62,

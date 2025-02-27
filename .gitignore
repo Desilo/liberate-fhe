@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/windows,linux,osx,python,c++,cuda,vim,jetbrains+all,emacs,git,jupyternotebooks,virtualenv,venv,cmake
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,linux,osx,python,c++,cuda,vim,jetbrains+all,emacs,git,jupyternotebooks,virtualenv,venv,cmake
 
+# Maunally ignored
+*.pkl
+
 ### C++ ###
 # Prerequisites
 *.d

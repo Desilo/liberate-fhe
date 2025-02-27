@@ -33,7 +33,7 @@ def ckks_engine(
         "read_cache": read_cache,
         "save_cache": True,
     }
-    engine = fhe.ckks_engine(devices=devices, verbose=False, **ctx_params)
+    engine = fhe.CkksEngine(devices=devices, verbose=False, **ctx_params)
     return engine
 
 
@@ -53,4 +53,4 @@ def test_make_engine(ckks_engine):
     @param ckks_engine:
     @return:
     """
-    assert isinstance(ckks_engine, fhe.ckks_engine)
+    assert isinstance(ckks_engine, fhe.CkksEngine)
