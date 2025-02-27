@@ -26,7 +26,7 @@ def ckks_engine(
         "num_special_primes": 2,
         "buffer_bit_length": 62,
         "sigma": 3.2,
-        "uniform_tenary_secret": True,
+        "uniform_ternary_secret": True,
         "cache_folder": "cache/",
         "quantum": "post_quantum",
         "distribution": "uniform",

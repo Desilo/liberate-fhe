@@ -15,8 +15,8 @@ cyclotomic_n = [1024, 2048, 4096, 8192, 16384, 32768]
 # We separate them in respective dictionaries.
 #
 # Also, there are 3 different methods of sampling the messages according to respective distributions.
-# Those are uniform, error, and (-1, 1) (tenary).
-# We differentiate the message distribution by dictionary keys: 'uniform', 'error', and 'tenary'.
+# Those are uniform, error, and (-1, 1) (ternary).
+# We differentiate the message distribution by dictionary keys: 'uniform', 'error', and 'ternary'.
 
 # This is the pre-quantum security requirements.
 logq_preq = {}
@@ -60,7 +60,7 @@ logq_preq["error"] = [
     613,
     478,
 ]
-logq_preq["tenary"] = [
+logq_preq["ternary"] = [
     27,
     19,
     14,
@@ -123,7 +123,7 @@ logq_postq["error"] = [
     573,
     445,
 ]
-logq_postq["tenary"] = [
+logq_postq["ternary"] = [
     25,
     17,
     13,
@@ -158,7 +158,7 @@ def partitq(q):
 
 # Gather up.
 logq = {}
-distributions = ["uniform", "error", "tenary"]
+distributions = ["uniform", "error", "ternary"]
 logq["pre_quantum"] = {
     distributions[disti]: partitq(logq_preq[dist])
     for disti, dist in enumerate(distributions)
@@ -176,7 +176,7 @@ def minimum_cyclotomic_order(
         "pre_quantum",
         "post_quantum",
     ], "Wrong quantum security model!!!"
-    assert distribution in ["uniform", "error", "tenary"]
+    assert distribution in ["uniform", "error", "ternary"]
     assert security_bits in [128, 192, 256]
 
     x = logq[quantum][distribution][security_bits]
@@ -192,7 +192,7 @@ def maximum_qbits(
         "pre_quantum",
         "post_quantum",
     ], "Wrong quantum security model!!!"
-    assert distribution in ["uniform", "error", "tenary"]
+    assert distribution in ["uniform", "error", "ternary"]
     assert security_bits in [128, 192, 256]
 
     x = cyclotomic_n

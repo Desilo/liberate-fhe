@@ -29,20 +29,20 @@ class CkksEngine:
         **ctx_params,
     ):
         """
-        buffer_bit_length=62,
-        scale_bits=40,
-        logN=15,
-        num_scales=None,
-        num_special_primes=2,
-        sigma=3.2,
-        uniform_tenary_secret=True,
-        cache_folder='cache/',
-        security_bits=128,
-        quantum='post_quantum',
-        distribution='uniform',
-        read_cache=True,
-        save_cache=True,
-        verbose=False
+            buffer_bit_length=62,
+            scale_bits=40,
+            logN=15,
+            num_scales=None,
+            num_special_primes=2,
+            sigma=3.2,
+            uniform_ternary_secret=True,
+            cache_folder='cache/',
+            security_bits=128,
+            quantum='post_quantum',
+            distribution='uniform',
+            read_cache=True,
+            save_cache=True,
+            verbose=False
         """
 
         self.bias_guard = bias_guard
