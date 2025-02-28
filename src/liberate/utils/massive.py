@@ -61,29 +61,6 @@ def calculate_ckks_cipher_datastruct_size_in_list_recursive(
     return total_size
 
 
-class VariesByIndex(dict):
-    debug = False
-
-    def __getitem__(self, index: Any):
-        if index not in self:
-            if self.debug:
-                caller_info = get_caller_info_traceback(stack_offset=2)
-                logger.warning(
-                    f"in {caller_info.last_describable} first time access to index {index}"
-                )
-            # set the value
-            if self.origin is not None:
-                self[index] = self.transform_fn(self.origin, index)
-            else:
-                self[index] = self.transform_fn(index)
-        return super().__getitem__(index)
-
-    def __init__(self, origin: Any, transform_fn: Callable, name: str):
-        self.origin = origin
-        self.transform_fn = transform_fn
-        self.name = name
-
-
 def next_power_of_n(x: int, n: int):
     return n ** math.ceil(math.log(x, n))
 
@@ -125,3 +102,71 @@ def decompose_with_power_of_n(a: int, n: int, return_expo=True) -> list[int]:
 
 def decompose_with_power_of_2(a: int, return_expo=True) -> list[int]:
     return decompose_with_power_of_n(a, 2, return_expo)
+
+
+def decompose_rot_offsets(offset: int, num_slots: int) -> list:
+    if abs(offset) >= num_slots:
+        offset = offset % num_slots
+
+    offsets = []
+    remaining = offset
+
+    # Break down the remaining offset into powers of 2
+    while remaining != 0:
+        power = next_power_of_2(abs(remaining))
+        if power > num_slots:  # Ensure no single offset exceeds num_slots
+            power //= 2
+        offsets.append(power if remaining > 0 else -power)
+        remaining -= offsets[-1]
+
+    return offsets
+
+class CachedDict:
+    def __init__(self, generator_func):
+        """
+        Initializes the CachedDict with a generator function.
+        
+        Parameters:
+        - generator_func: A function that takes a key and returns a value.
+        """
+        self.generator_func = generator_func
+        self._cache = {}
+
+    def __getitem__(self, key):
+        """
+        Returns the value associated with 'key'. If the key is not in the cache,
+        the generator function is called with the key to produce the value.
+        """
+        if key not in self._cache:
+            self._cache[key] = self.generator_func(key)
+        return self._cache[key]
+
+    def __contains__(self, key):
+        """
+        Checks if the key has already been generated and stored.
+        """
+        return key in self._cache
+
+    def __setitem__(self, key, value):
+        """
+        Optionally, allow setting a key directly.
+        """
+        self._cache[key] = value
+
+    def get(self, key, default=None):
+        """
+        Returns the value for key if key is in the cache; otherwise, returns default.
+        """
+        try:
+            return self.__getitem__(key)
+        except Exception:
+            return default
+
+    def clear(self):
+        """
+        Clears the cached values.
+        """
+        self._cache.clear()
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self._cache})"

@@ -1,5 +1,6 @@
+from collections import defaultdict
 import typing
-from typing import Dict, List, Union
+from typing import Any, Dict, List, Union
 import inspect
 from functools import wraps
 import numpy as np
@@ -37,7 +38,7 @@ class DataStruct:
         - level: Integer, the current level where this data is situated.
         - version: String, version number.
         """
-        # todo might need a engine identifier to know which engine created this data    
+        # todo might need a engine identifier to know which engine created this data
         self.data = data
         self.include_special = include_special
         self.ntt_state = ntt_state
@@ -112,6 +113,10 @@ class DataStruct:
     @classmethod
     def get_device_of_tensor(cls, data):
         """Get the device of the tensor in the data structure.
+
+        Note: this method only checks the first found tensor of the data structure.
+        It assumes that all elements in the data structure are on the same device.
+
         Args:
             data: The data structure to check.
         Returns:
@@ -122,9 +127,9 @@ class DataStruct:
             return data.device
         elif isinstance(data, list):
             return cls.get_device_of_tensor(data[0])
-        elif isinstance(data, tuple):
+        elif isinstance(data, tuple):  # legacy datastruct uses tuple
             return cls.get_device_of_tensor(data[0])
-        elif isinstance(data, dict):
+        elif isinstance(data, dict):  # plaintext cache
             return cls.get_device_of_tensor(list(data.values())[0])
         elif isinstance(data, DataStruct):
             return cls.get_device_of_tensor(data.data)
@@ -143,7 +148,7 @@ class DataStruct:
         return self.get_device_of_tensor(self.data)
 
     @classmethod
-    def move_tensor_to_device_recursive(
+    def copy_tensor_to_device_recursive(
         cls, data, device: str, non_blocking=True
     ):
         """Recursively move tensors in the data structure to a specified device.
@@ -158,29 +163,29 @@ class DataStruct:
             return data.to(device, non_blocking=non_blocking)
         elif isinstance(data, list):
             return [
-                cls.move_tensor_to_device_recursive(item, device)
+                cls.copy_tensor_to_device_recursive(item, device)
                 for item in data
             ]
         elif isinstance(data, tuple):  # legacy datastruct uses tuple
             return tuple(
-                cls.move_tensor_to_device_recursive(item, device)
+                cls.copy_tensor_to_device_recursive(item, device)
                 for item in data
             )
         elif isinstance(data, dict):  # plaintext cache
             return {
-                key: cls.move_tensor_to_device_recursive(value, device)
+                key: cls.copy_tensor_to_device_recursive(value, device)
                 for key, value in data.items()
             }
         elif isinstance(data, DataStruct):
-            return data.to_device(device)
+            return data.copy_to(device)
         else:
             logger.warning(
                 f"Unsupported data type to move to device: {type(data)}, returning the original data."
             )
             return data
 
-    def to_device(self, device: str, non_blocking=True):
-        """Move the data structure to a specified device.
+    def copy_to(self, device: str, non_blocking=True):
+        """Copy the data structure to a specified device and return a new instance.
         Args:
             device: The target device.
         Returns:
@@ -188,7 +193,7 @@ class DataStruct:
         """
         cls = self.__class__
         return cls(
-            data=cls.move_tensor_to_device_recursive(
+            data=cls.copy_tensor_to_device_recursive(
                 data=self.data, device=device, non_blocking=non_blocking
             ),
             include_special=self.include_special,
@@ -199,8 +204,8 @@ class DataStruct:
         )
 
     def to(self, device: str, non_blocking=True):
-        # alias for to_device
-        return self.to_device(device, non_blocking)
+        # alias for copy_to
+        return self.copy_to(device, non_blocking)
 
     def __repr__(self):
         return f"{self.__class__.__name__}(data={self.data}, include_special={self.include_special}, ntt_state={self.ntt_state}, montgomery_state={self.montgomery_state}, level={self.level}, description={self.description})"
@@ -263,19 +268,53 @@ class ConjugationKey(DataStruct):
 # ================== #
 
 
-class Plaintext:
+class Plaintext(DataStruct):
     def __init__(
         self,
         src: Union[list, tuple],
-        cache: Dict[int, list] = {},
-        *args,
-        **kwargs,
+        cache: Dict[
+            int, Dict[str, Any]
+        ] = None,  # level: {what_cache: cache_data}
+        padding=True,  # todo remove padding flag in legacy code
     ):
         self.src = src
-        self.cache = cache
+        self.data = cache or defaultdict(dict)  # cache is alias of data
+        self.padding = padding
 
-    def clone(self, clone_cache=True):
+    @property
+    def cache(self):
+        return self.data
+
+    @cache.setter
+    def cache(self, value):
+        self.data = value
+
+    def clone(self):
         cls = self.__class__
         src = cls.clone_tensor_recursive(self.src)
-        cache = cls.clone_tensor_recursive(self.cache) if clone_cache else {}
-        return cls(src=src, cache=cache)
+        cache = cls.clone_tensor_recursive(self.cache)
+        return cls(src, cache=cache)
+
+    @property
+    def device(self):
+        if not self.cache:
+            return self.get_device_of_tensor(self.src)
+        else:
+            return self.get_device_of_tensor(self.cache)
+
+    def copy_to(self, device, non_blocking=True):
+        cls = self.__class__
+        src = cls.copy_tensor_to_device_recursive(
+            data=self.src, device=device, non_blocking=non_blocking
+        )
+        cache = cls.copy_tensor_to_device_recursive(
+            data=self.cache, device=device, non_blocking=non_blocking
+        )
+        return cls(src, cache=cache)
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(data={self.src}, cached levels={list(self.cache.keys())})"
+
+    @property
+    def level(self):
+        raise NotImplementedError("Plaintext does not have level attribute.")
