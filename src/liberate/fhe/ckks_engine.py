@@ -886,6 +886,9 @@ class ckks_engine:
             self.ntt.mont_enter_scalar(d0, PiRi, level, -2)
             self.ntt.mont_enter_scalar(d1, PiRi, level, -2)
 
+            self.ntt.reduce_2q(d0, level, -1)
+            self.ntt.reduce_2q(d1, level, -1)
+
         # Carve out again, since d0 and d1 are fresh new.
         c0 = [d[:-self.ntt.num_special_primes] for d in d0]
         c1 = [d[:-self.ntt.num_special_primes] for d in d1]
