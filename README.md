@@ -60,7 +60,7 @@ result_decrypted = engine.decrode(ct_result, sk)
 If you would like a detailed explanation, please refer to
 the [official documentation](https://docs.desilo.ai/liberate-fhe/getting-started/quick-start).
 
-# How to Install
+# How to Install with poetry
 
 ### Clone this repository
 
@@ -73,26 +73,37 @@ cd liberate-fhe
 
 ```shell
 poetry install
+poetry add setuptools
 ```
 
-### Run Cuda build Script.
+### Run library build Script
+
+```shell
+poetry run python setup.py install
+```
+
+# How to Install with pip
+
+python setup.py install
+
+### Clone this repository
+
+```shell
+git clone https://github.com/Desilo/liberate-fhe.git
+cd liberate-fhe
+```
+
+### Install dependencies
+
+```shell
+pip install setuptools
+pip install -e .
+```
+
+### Run library build Script
 
 ```shell
 python setup.py install
-# poetry run python setup.py install
-```
-
-### Build a python package
-
-```shell
-poetry build
-```
-
-### Install Liberate.FHE library
-
-```shell
-pip install .
-# poetry run python -m pip install .
 ```
 
 # Documentation
