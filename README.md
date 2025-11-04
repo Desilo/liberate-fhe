@@ -1,3 +1,11 @@
+## ⚠️ This Library is Deprecated
+
+**Liberate.FHE is no longer maintained or actively developed.**
+
+It has been superseded by its successor, **DESILO.FHE**. We recommend all new and existing users use DESILO.FHE.
+
+* **View the new library here:** [https://fhe.desilo.dev/](https://fhe.desilo.dev/)
+
 # Welcome to Liberate.FHE!
 
 Liberate.FHE is an open-source Fully Homomorphic Encryption (FHE) library for bridging the gap between theory and practice with a focus on performance and accuracy.
