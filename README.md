@@ -4,8 +4,10 @@
 
 It has been replaced by its successor, **the DESILO FHE library**.
 We highly recommend using this new library, which is easier to use and has more functionalities, including bootstrap.
+If you have any questions, please contact us at library@desilo.ai.
 
 * **View the new library here:** [https://fhe.desilo.dev/](https://fhe.desilo.dev/)
+
 
 # Welcome to Liberate.FHE!
 
