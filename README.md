@@ -1,8 +1,9 @@
-## ⚠️ This Library is Deprecated
+## ⚠️ This Library is now Deprecated
 
-**Liberate.FHE is no longer maintained or actively developed.**
+**Liberate.FHE is no longer maintained.**
 
-It has been superseded by its successor, **DESILO.FHE**. We recommend all new and existing users use DESILO.FHE.
+It has been replaced by its successor, **the DESILO FHE library**.
+We highly recommend using this new library, which is easier to use and has more functionalities, including bootstrap.
 
 * **View the new library here:** [https://fhe.desilo.dev/](https://fhe.desilo.dev/)
 
